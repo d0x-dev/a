@@ -2,36 +2,21 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=yes">
-    <title>AirBeats – Immersive Music Experience</title>
-    <meta name="description" content="Step into the future of music with AirBeats. Seamless streaming, pure vibes, and an immersive audio experience.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AirBeats – Immersive Music Experience | Free & Open Source</title>
+    <meta name="description" content="AirBeats is a free, open-source music streaming app for Android & Windows. Crystal-clear audio, smart playlists, offline caching and Hi-Res audio support.">
+    <meta name="keywords" content="AirBeats, music app, open source, Android music player, Windows music app, free music streaming">
     <meta name="theme-color" content="#ff1178">
-    <!-- Icon for favicon and share file -->
+    <meta name="author" content="AirBeats Team">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AirBeats – Immersive Music Experience">
+    <meta property="og:description" content="Free & open-source music app. Seamless streaming, pure vibes, immersive audio.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/drkvenom786/Airbeats/137e3935198c25bfbd5eef1a050002ed52fa84ff/icon.png">
+    <meta name="twitter:card" content="summary_large_image">
+
     <link rel="icon" href="https://raw.githubusercontent.com/drkvenom786/Airbeats/137e3935198c25bfbd5eef1a050002ed52fa84ff/icon.png" type="image/png">
-
-    <style>
-        * {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .hero-subtitle,
-        .hero-subtitle * {
-            -webkit-touch-callout: text;
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
-        button, .btn, a, .dev-role, .screenshot-frame, .version-master-header {
-            cursor: pointer;
-        }
-
-        a, a:link, a:visited, a:hover, a:active {
-            color: inherit;
-            text-decoration: none;
-        }
-    </style>
 
     <script type="application/ld+json" id="json-ld">
     {
@@ -39,23 +24,17 @@
         "@type": "SoftwareApplication",
         "name": "AirBeats – Music Streaming App",
         "applicationCategory": "MusicApplication",
-        "operatingSystem": "Android",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-        },
+        "operatingSystem": "Android, Windows",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
         "softwareVersion": "loading...",
-        "downloadUrl": "#",
-        "author": {
-            "@type": "Organization",
-            "name": "AirBeats Team"
-        }
+        "downloadUrl": "https://github.com/d0x-dev/AirBeats/releases",
+        "license": "https://github.com/d0x-dev/AirBeats/blob/main/LICENSE",
+        "author": { "@type": "Organization", "name": "AirBeats Team" }
     }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <style>
@@ -63,7 +42,6 @@
             --primary: #ff1178;
             --primary-dark: #d4005c;
             --accent: #00c8ff;
-            --accent-dark: #0099cc;
             --accent-2: #ff9e00;
             --bg: #0a0e17;
             --surface: #141a26;
@@ -77,8 +55,7 @@
             --maxw: 1200px;
             --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             --gradient-rainbow: linear-gradient(90deg, #ff1178, #ff9e00, #00c8ff, #6b5df7);
-            --gradient-animated: linear-gradient(270deg, #ff1178, #ff9e00, #00c8ff, #6b5df7, #ff1178);
-            --section-spacing: 5rem;
+            --nav-height: 64px;
         }
 
         [data-theme="light"] {
@@ -92,1734 +69,425 @@
             --shadow-glow: 0 0 30px rgba(255, 17, 120, 0.15);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html, body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-height) + 12px); }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
-            scroll-behavior: smooth;
-            overflow-x: hidden;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; }
+
+        .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem; }
+
+        section { padding: 4rem 0; position: relative; }
+        @media (min-width: 768px) { section { padding: 5.5rem 0; } }
+
+        /* ===== Scroll progress ===== */
+        .scroll-progress {
+            position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+            background: var(--gradient-rainbow); z-index: 10001;
         }
 
-        .container {
-            width: 100%;
-            max-width: var(--maxw);
-            margin: 0 auto;
-            padding: 0 1rem;
+        /* ===== Navbar ===== */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height);
+            background: color-mix(in srgb, var(--bg) 80%, transparent);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000; display: flex; align-items: center;
         }
+        .navbar .container { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.1rem; }
+        .nav-brand img { width: 34px; height: 34px; border-radius: 9px; }
+        .nav-links { display: none; gap: 1.5rem; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+        .nav-links a { transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        @media (min-width: 860px) { .nav-links { display: flex; } }
+        .nav-actions { display: flex; align-items: center; gap: 0.6rem; }
+        .nav-gh-btn {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.45rem 0.95rem; border-radius: 40px; font-size: 0.82rem; font-weight: 700;
+            background: var(--surface-light); border: 1px solid var(--border); transition: all 0.25s;
+        }
+        .nav-gh-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .nav-gh-btn .star-count { color: var(--accent-2); }
+        .theme-toggle {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: var(--surface); border: 1px solid var(--border); color: var(--text);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
+        }
+        .theme-toggle:hover { border-color: var(--primary); transform: rotate(20deg); }
 
-        @media (min-width: 640px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-        }
+        /* ===== Blobs ===== */
+        .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.3; z-index: 0; animation: float 20s infinite alternate ease-in-out; }
+        .blob-1 { width: 380px; height: 380px; top: -100px; left: -150px; background: var(--primary); }
+        .blob-2 { width: 320px; height: 320px; bottom: -100px; right: -100px; background: var(--accent); }
+        .blob-3 { width: 240px; height: 240px; top: 40%; right: 20%; background: var(--accent-2); }
+        @keyframes float { to { transform: translate(60px, -60px) scale(1.1); } }
 
-        section {
-            padding: 3rem 0;
-            position: relative;
-        }
+        /* ===== Hero ===== */
+        header { position: relative; padding: calc(var(--nav-height) + 3.5rem) 0 3.5rem; overflow: hidden; text-align: center; }
+        @media (min-width: 768px) { header { padding: calc(var(--nav-height) + 6rem) 0 5rem; } }
 
-        @media (min-width: 768px) {
-            section {
-                padding: var(--section-spacing) 0;
-            }
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3;
-            z-index: 0;
-            animation: float 20s infinite alternate ease-in-out;
-        }
-
-        .blob-1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            left: -150px;
-            background: var(--primary);
-        }
-
-        .blob-2 {
-            width: 250px;
-            height: 250px;
-            bottom: -100px;
-            right: -100px;
-            background: var(--accent);
-        }
-
-        .blob-3 {
-            width: 200px;
-            height: 200px;
-            top: 40%;
-            right: 20%;
-            background: var(--accent-2);
-        }
-
-        @media (min-width: 768px) {
-            .blob-1 {
-                width: 400px;
-                height: 400px;
-            }
-            .blob-2 {
-                width: 350px;
-                height: 350px;
-            }
-            .blob-3 {
-                width: 250px;
-                height: 250px;
-            }
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, -60px) scale(1.1); }
-        }
-
-        header {
-            position: relative;
-            padding: 3rem 0 2rem;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        @media (min-width: 768px) {
-            header {
-                padding: 6rem 0 4rem;
-            }
-        }
-
-        .logo-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 1rem;
-            cursor: pointer;
-        }
+        .logo-container { position: relative; display: inline-block; margin-bottom: 1.2rem; cursor: pointer; opacity: 0; animation: logoPopIn 0.8s cubic-bezier(0.68,-0.55,0.265,1.55) 0.2s forwards; }
+        @keyframes logoPopIn { from { opacity: 0; transform: scale(0.5) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
 
         .app-logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 24px;
-            object-fit: cover;
-            box-shadow: var(--shadow-glow), 0 20px 60px rgba(0, 0, 0, 0.5);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            z-index: 2;
+            width: 110px; height: 110px; border-radius: 26px; object-fit: cover;
+            box-shadow: var(--shadow-glow), 0 20px 60px rgba(0,0,0,0.5);
+            transition: transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275); position: relative; z-index: 2;
         }
+        @media (min-width: 768px) { .app-logo { width: 140px; height: 140px; border-radius: 30px; } }
+        .app-logo:hover { transform: scale(1.05) rotate(5deg); }
 
-        @media (min-width: 640px) {
-            .app-logo {
-                width: 120px;
-                height: 120px;
-                border-radius: 26px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .app-logo {
-                width: 140px;
-                height: 140px;
-                border-radius: 28px;
-            }
-        }
-
-        .app-logo:hover {
-            transform: scale(1.05) rotate(5deg);
-        }
-
-        .glowing-line {
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            border-radius: 32px;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-
+        .glowing-line { position: absolute; inset: -8px; border-radius: 34px; pointer-events: none; z-index: 1; overflow: hidden; }
         .glowing-line::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                from 0deg,
-                transparent,
-                transparent,
-                transparent,
-                var(--primary),
-                var(--accent),
-                var(--accent-2),
-                transparent,
-                transparent,
-                transparent
-            );
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent 60%, var(--primary), var(--accent), var(--accent-2), transparent 90%);
             animation: rotateGlow 2.5s linear infinite;
         }
+        @keyframes rotateGlow { to { transform: rotate(360deg); } }
+        .glowing-line::after { content: ''; position: absolute; inset: 4px; background: var(--bg); border-radius: 30px; }
 
-        @keyframes rotateGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .glowing-line::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            right: 4px;
-            bottom: 4px;
-            background: var(--bg);
-            border-radius: 28px;
-        }
-
-        [data-theme="light"] .glowing-line::after {
-            background: var(--bg);
+        .oss-badge {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            background: rgba(0, 200, 255, 0.12); border: 1px solid rgba(0, 200, 255, 0.35);
+            color: var(--accent); font-size: 0.78rem; font-weight: 700;
+            padding: 0.35rem 1rem; border-radius: 40px; margin-bottom: 1rem; letter-spacing: 0.4px;
         }
 
         h1.hero-title {
-            font-size: clamp(2rem, 8vw, 4.5rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: var(--gradient-rainbow);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: clamp(2.4rem, 8vw, 4.8rem); font-weight: 900; margin-bottom: 1rem; letter-spacing: -1px;
+            background: var(--gradient-rainbow); -webkit-background-clip: text; background-clip: text; color: transparent;
+            opacity: 0; animation: fadeUp 0.8s ease-out 0.4s forwards;
         }
-
         .hero-subtitle {
-            font-size: clamp(0.9rem, 4vw, 1.2rem);
-            color: var(--text-muted);
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            padding: 0 1rem;
+            font-size: clamp(0.95rem, 4vw, 1.2rem); color: var(--text-muted);
+            max-width: 760px; margin: 0 auto 1.8rem;
+            opacity: 0; animation: fadeUp 0.8s ease-out 0.6s forwards;
         }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .btns {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-            padding: 0 1rem;
+        .platform-tabs { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.2rem; }
+        .platform-tab {
+            display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.3rem;
+            border-radius: 30px; font-size: 0.85rem; font-weight: 600;
+            border: 1px solid var(--border); background: var(--surface); color: var(--text-muted);
+            cursor: pointer; transition: all 0.3s;
         }
+        .platform-tab.active { background: var(--gradient); color: #fff; border-color: transparent; box-shadow: 0 6px 16px rgba(255,17,120,0.25); }
+        .platform-tab:hover:not(.active) { background: var(--surface-light); transform: translateY(-2px); }
 
-        @media (min-width: 640px) {
-            .btns {
-                gap: 1rem;
-            }
-        }
-
+        .btns { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.8s ease-out 0.8s forwards; }
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.7rem 1.2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: clamp(0.8rem, 3vw, 1rem);
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 1.8rem; border-radius: 50px; font-weight: 700;
+            font-size: clamp(0.85rem, 3vw, 1rem); border: none; cursor: pointer; transition: all 0.3s;
         }
+        .btn-primary { background: var(--gradient); color: #fff; box-shadow: var(--shadow-glow); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,17,120,0.4); }
+        .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--surface-light); transform: translateY(-3px); border-color: var(--primary); }
 
-        @media (min-width: 640px) {
-            .btn {
-                padding: 0.8rem 1.5rem;
-            }
+        .note { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* ===== GitHub stats bar ===== */
+        .gh-stats {
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem;
         }
-
-        @media (min-width: 768px) {
-            .btn {
-                padding: 1rem 2rem;
-            }
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 17, 120, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--surface-light);
-            transform: translateY(-3px);
-        }
-
-        .note {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        @media (min-width: 768px) {
-            .note {
-                font-size: 0.9rem;
-            }
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: var(--shadow);
+        .gh-stat {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem; border-radius: 14px; font-size: 0.85rem; font-weight: 600;
             transition: all 0.3s;
         }
+        .gh-stat:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .gh-stat i { color: var(--primary); font-size: 1rem; }
+        .gh-stat b { color: var(--accent); }
 
-        @media (min-width: 768px) {
-            .theme-toggle {
-                top: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-            }
+        /* ===== Section titles ===== */
+        .section-title {
+            text-align: center; font-size: clamp(1.6rem, 6vw, 2.6rem); font-weight: 800; margin-bottom: 0.6rem;
+            background: var(--gradient-rainbow); -webkit-background-clip: text; background-clip: text; color: transparent;
         }
+        .section-desc { text-align: center; color: var(--text-muted); max-width: 620px; margin: 0 auto 2.5rem; font-size: 0.95rem; }
 
+        /* ===== Cards ===== */
         .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.2rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            background: var(--surface); border-radius: var(--radius); padding: 1.5rem;
+            box-shadow: var(--shadow); border: 1px solid var(--border);
+            transition: all 0.3s; position: relative; overflow: hidden;
         }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient); opacity: 0; transition: opacity 0.3s; }
+        .card:hover::before { opacity: 1; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 25px 45px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,17,120,0.2); }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 17, 120, 0.2);
-        }
-
-        .features-title {
-            text-align: center;
-            font-size: clamp(1.5rem, 6vw, 2.5rem);
-            font-weight: 800;
-            margin-bottom: 2rem;
-            background: var(--gradient-rainbow);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .features-title {
-                margin-bottom: 3rem;
-            }
-        }
-
-        .features-scroller {
-            display: grid;
-            grid-auto-flow: column;
-            grid-auto-columns: 85%;
-            gap: 1rem;
-            overflow-x: auto;
-            padding: 0.5rem 0.5rem 1.5rem;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        @media (min-width: 640px) {
-            .features-scroller {
-                grid-auto-columns: calc(50% - 1rem);
-            }
-        }
-
-        @media (min-width: 768px) {
-            .features-scroller {
-                grid-auto-columns: calc(33.333% - 1rem);
-                gap: 1.5rem;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .features-scroller {
-                grid-auto-columns: calc(25% - 1rem);
-            }
-        }
-
-        .features-scroller::-webkit-scrollbar {
-            height: 5px;
-        }
-
-        @media (min-width: 768px) {
-            .features-scroller::-webkit-scrollbar {
-                height: 8px;
-            }
-        }
-
-        .features-scroller::-webkit-scrollbar-track {
-            background: var(--surface);
-            border-radius: 10px;
-        }
-
-        .features-scroller::-webkit-scrollbar-thumb {
-            background: var(--gradient);
-            border-radius: 10px;
-        }
-
-        .feature-card {
-            scroll-snap-align: center;
-            min-height: 240px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        @media (min-width: 768px) {
-            .feature-card {
-                min-height: 280px;
-            }
-        }
+        /* ===== Features grid ===== */
+        .features-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+        @media (min-width: 600px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 960px) { .features-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
 
         .feature-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.8rem;
-            font-size: 1.2rem;
-            color: white;
-            transition: transform 0.3s ease;
+            width: 54px; height: 54px; border-radius: 14px; background: var(--gradient);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem; font-size: 1.4rem; color: #fff; transition: transform 0.3s;
         }
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(6deg); }
+        .feature-card h3 { font-size: 1.15rem; margin-bottom: 0.4rem; }
+        .feature-card p { font-size: 0.88rem; color: var(--text-muted); }
 
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1) rotate(5deg);
+        /* ===== Visualizer ===== */
+        .visualizer-container {
+            height: 100px; display: flex; align-items: flex-end; justify-content: center; gap: 4px;
+            padding: 0 10px; background: rgba(0,0,0,0.2); border-radius: var(--radius); border: 1px solid var(--border);
         }
+        @media (min-width: 768px) { .visualizer-container { height: 140px; } }
+        .visualizer-bar { background: var(--gradient); border-radius: 3px 3px 0 0; min-width: 3px; max-width: 7px; flex: 1; transition: height 0.1s ease-out; }
 
-        @media (min-width: 768px) {
-            .feature-icon {
-                width: 60px;
-                height: 60px;
-                border-radius: 16px;
-                margin-bottom: 1.2rem;
-                font-size: 1.5rem;
-            }
-        }
-
-        .feature-card h3 {
-            font-size: clamp(1rem, 4vw, 1.3rem);
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            font-size: clamp(0.75rem, 3vw, 0.9rem);
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .version-master-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 0.5rem;
-        }
-
+        /* ===== Version history ===== */
+        .version-master-wrapper { max-width: 900px; margin: 0 auto; }
         .version-master-header {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 0.8rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            background: var(--surface); border-radius: var(--radius); padding: 1.1rem 1.6rem;
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--border); box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s;
         }
+        .version-master-header:hover { background: var(--surface-light); border-color: var(--primary); }
+        .version-master-title { display: flex; align-items: center; gap: 0.8rem; font-weight: 700; font-size: 1.05rem; }
+        .version-master-title i { color: var(--primary); font-size: 1.3rem; }
+        .version-badge { background: var(--gradient); color: #fff; padding: 0.2rem 0.75rem; border-radius: 30px; font-size: 0.75rem; font-weight: 600; }
+        .version-master-header .chevron { transition: transform 0.4s; color: var(--primary); font-size: 1.2rem; }
+        .version-master-container.open .chevron { transform: rotate(180deg); }
+        .version-master-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1); background: var(--surface); border-radius: 0 0 var(--radius) var(--radius); }
+        .version-master-container.open .version-master-content { max-height: 460px; margin-top: 0.9rem; overflow-y: auto; }
 
-        @media (min-width: 640px) {
-            .version-master-header {
-                padding: 1rem 1.5rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .version-master-header {
-                padding: 1.2rem 2rem;
-            }
-        }
-
-        .version-master-header:hover {
-            background: var(--surface-light);
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
-        .version-master-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-            font-size: clamp(0.9rem, 4vw, 1.2rem);
-        }
-
-        @media (min-width: 640px) {
-            .version-master-title {
-                gap: 0.8rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .version-master-title {
-                gap: 1rem;
-            }
-        }
-
-        .version-master-title i {
-            color: var(--primary);
-            font-size: clamp(1rem, 5vw, 1.5rem);
-        }
-
-        .version-badge {
-            background: var(--gradient);
-            padding: 0.2rem 0.5rem;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        @media (min-width: 768px) {
-            .version-badge {
-                padding: 0.25rem 0.8rem;
-                font-size: 0.8rem;
-            }
-        }
-
-        .version-master-header i.bi-chevron-down {
-            transition: transform 0.4s ease;
-            font-size: 1rem;
-            color: var(--primary);
-        }
-
-        @media (min-width: 768px) {
-            .version-master-header i.bi-chevron-down {
-                font-size: 1.3rem;
-            }
-        }
-
-        .version-master-container.open .version-master-header i.bi-chevron-down {
-            transform: rotate(180deg);
-        }
-
-        .version-master-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: var(--surface);
-            border-radius: 0 0 var(--radius) var(--radius);
-            margin-top: 0;
-        }
-
-        .version-master-container.open .version-master-content {
-            max-height: 450px;
-            margin-top: 0.8rem;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        @media (min-width: 768px) {
-            .version-master-container.open .version-master-content {
-                margin-top: 1rem;
-            }
-        }
-
-        .versions-list-compact {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 0.5rem 0.5rem 0.8rem;
-        }
-
-        @media (min-width: 640px) {
-            .versions-list-compact {
-                gap: 0.6rem;
-                padding: 0.5rem 0.8rem 1rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .versions-list-compact {
-                gap: 0.75rem;
-                padding: 0.5rem 1rem 1rem;
-            }
-        }
-
-        .version-compact-item {
-            background: var(--surface-light);
-            border-radius: 12px;
-            padding: 0.7rem 1rem;
-            border-left: 3px solid var(--primary);
-            transition: all 0.3s ease;
-        }
-
-        @media (min-width: 640px) {
-            .version-compact-item {
-                padding: 0.8rem 1.2rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .version-compact-item {
-                padding: 1rem 1.5rem;
-                border-left: 4px solid var(--primary);
-            }
-        }
-
-        .version-compact-item:hover {
-            transform: translateX(8px);
-            background: linear-gradient(135deg, rgba(255, 17, 120, 0.15), rgba(0, 200, 255, 0.05));
-            border-left-color: var(--accent);
-        }
-
-        .version-compact-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.4rem;
-        }
-
-        .version-tag-sm {
-            background: var(--gradient);
-            padding: 0.15rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        @media (min-width: 768px) {
-            .version-tag-sm {
-                padding: 0.2rem 0.8rem;
-                font-size: 0.8rem;
-            }
-        }
-
-        .version-date-sm {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
-        @media (min-width: 768px) {
-            .version-date-sm {
-                font-size: 0.8rem;
-            }
-        }
-
-        .version-notes-preview {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin: 0.3rem 0 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        @media (min-width: 768px) {
-            .version-notes-preview {
-                font-size: 0.85rem;
-                margin: 0.5rem 0 0.8rem;
-            }
-        }
-
-        .version-download-sm {
-            display: flex;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-        }
-
+        .versions-list-compact { display: flex; flex-direction: column; gap: 0.7rem; padding: 0.6rem 0.9rem 1rem; }
+        .version-compact-item { background: var(--surface-light); border-radius: 12px; padding: 0.9rem 1.3rem; border-left: 4px solid var(--primary); transition: all 0.3s; }
+        .version-compact-item:hover { transform: translateX(8px); background: linear-gradient(135deg, rgba(255,17,120,0.15), rgba(0,200,255,0.05)); border-left-color: var(--accent); }
+        .version-compact-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem; }
+        .version-tag-sm { background: var(--gradient); color: #fff; padding: 0.2rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .version-date-sm { font-size: 0.75rem; color: var(--text-muted); }
+        .version-notes-preview { font-size: 0.82rem; color: var(--text-muted); margin: 0.4rem 0 0.7rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .version-download-sm { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 0.4rem; }
         .download-sm-btn {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 0.25rem 0.6rem;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.2rem;
-            transition: all 0.3s ease;
+            border: 1px solid var(--primary); color: var(--primary); background: transparent;
+            padding: 0.35rem 0.95rem; border-radius: 30px; font-size: 0.75rem; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 0.35rem; transition: all 0.3s;
         }
+        .download-sm-btn:hover { background: var(--primary); color: #fff; transform: scale(1.05); }
+        .asset-type-badge { font-size: 0.62rem; opacity: 0.85; }
 
-        .download-sm-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.05);
+        /* ===== Install steps ===== */
+        .install-steps { max-width: 800px; margin: 0 auto; }
+        .step {
+            display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem;
+            background: var(--surface-light); padding: 1.2rem 1.4rem; border-radius: var(--radius);
+            border-left: 4px solid var(--primary); transition: all 0.3s;
         }
-
-        @media (min-width: 768px) {
-            .download-sm-btn {
-                padding: 0.4rem 1rem;
-                font-size: 0.8rem;
-                gap: 0.4rem;
-            }
+        .step:hover { transform: translateX(5px); border-left-color: var(--accent); }
+        .step-number {
+            background: var(--gradient); color: #fff; width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;
         }
+        .step-content h4 { font-size: 1.02rem; margin-bottom: 0.25rem; }
+        .step-content p { color: var(--text-muted); font-size: 0.86rem; }
 
-        .dev-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            padding: 0 0.5rem;
+        /* ===== Screenshot ===== */
+        .screenshot-container { max-width: 360px; margin: 0 auto; }
+        .screenshot-frame { border-radius: 26px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5); transition: all 0.4s; }
+        .screenshot-frame:hover { transform: scale(1.03); box-shadow: 0 30px 60px rgba(255,17,120,0.25); }
+        .screenshot-frame img { display: block; width: 100%; }
+
+        /* ===== Open Source ===== */
+        .oss-card {
+            max-width: 860px; margin: 0 auto; text-align: center; padding: 2.5rem 1.8rem;
+            background: linear-gradient(135deg, rgba(255,17,120,0.08), rgba(0,200,255,0.06));
+            border: 1px solid var(--border); border-radius: var(--radius);
         }
+        .oss-card i.gh-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .oss-card h3 { font-size: 1.5rem; margin-bottom: 0.6rem; }
+        .oss-card p { color: var(--text-muted); max-width: 560px; margin: 0 auto 1.5rem; font-size: 0.92rem; }
+        .oss-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; }
 
-        @media (min-width: 640px) {
-            .dev-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .dev-grid {
-                gap: 2rem;
-            }
-        }
-
-        .dev-card {
-            padding: 1.2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dev-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 17, 120, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-
-        .dev-card:hover::after {
-            opacity: 1;
-        }
-
-        @media (min-width: 640px) {
-            .dev-card {
-                padding: 1.5rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .dev-card {
-                padding: 2rem;
-            }
-        }
-
-        .dev-header {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-            flex-wrap: nowrap;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 640px) {
-            .dev-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.8rem;
-            }
-            .dev-info {
-                text-align: center;
-            }
-            .dev-skills {
-                justify-content: center;
-            }
-        }
-
-        @media (min-width: 641px) {
-            .dev-header {
-                flex-direction: row;
-                text-align: left;
-            }
-            .dev-info {
-                text-align: left;
-                flex: 1;
-            }
-            .dev-skills {
-                justify-content: flex-start;
-            }
-        }
-
+        /* ===== Developers ===== */
+        .dev-grid { display: grid; grid-template-columns: 1fr; gap: 1.8rem; }
+        @media (min-width: 700px) { .dev-grid { grid-template-columns: repeat(2, 1fr); } }
+        .dev-card { padding: 2rem; }
+        .dev-header { display: flex; align-items: center; gap: 1.3rem; margin-bottom: 1rem; }
+        @media (max-width: 560px) { .dev-header { flex-direction: column; text-align: center; } .dev-skills, .dev-links { justify-content: center; } }
         .dev-avatar {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            object-fit: cover;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(255, 17, 120, 0.2);
+            width: 96px; height: 96px; border-radius: 50%; border: 3px solid var(--primary);
+            object-fit: cover; flex-shrink: 0; transition: all 0.3s; box-shadow: 0 8px 20px rgba(255,17,120,0.2);
         }
-
-        .dev-card:hover .dev-avatar {
-            transform: scale(1.02);
-            border-color: var(--accent);
-            box-shadow: 0 10px 25px rgba(255, 17, 120, 0.3);
-        }
-
-        @media (min-width: 768px) {
-            .dev-avatar {
-                width: 100px;
-                height: 100px;
-                border-width: 4px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .dev-avatar {
-                width: 110px;
-                height: 110px;
-            }
-        }
-
-        .dev-info h3 {
-            font-size: clamp(1.2rem, 5vw, 1.6rem);
-            margin-bottom: 0.4rem;
-            font-weight: 800;
-        }
-
+        .dev-card:hover .dev-avatar { border-color: var(--accent); transform: scale(1.03); }
+        .dev-info h3 { font-size: 1.45rem; font-weight: 800; margin-bottom: 0.35rem; }
         .dev-info h3 a {
             background: linear-gradient(270deg, #ff1178, #ff9e00, #00c8ff, #6b5df7, #ff1178);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent !important;
-            text-decoration: none;
-            display: inline-block;
-            animation: gradientShift 3s ease infinite;
-            font-weight: 800;
+            background-size: 300% 300%; -webkit-background-clip: text; background-clip: text;
+            color: transparent; animation: gradientShift 3s ease infinite;
         }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .dev-info h3 a:hover {
-            animation: gradientShift 0.6s ease infinite;
-            transform: scale(1.02);
-        }
-
+        @keyframes gradientShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         .dev-role {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.8rem;
-            display: inline-block;
-            padding: 0.25rem 0.9rem;
-            border-radius: 30px;
-            background: rgba(255, 17, 120, 0.15);
-            border: 1px solid rgba(255, 17, 120, 0.3);
-            letter-spacing: 0.5px;
+            color: var(--primary); font-weight: 700; font-size: 0.82rem; display: inline-block;
+            padding: 0.3rem 1rem; border-radius: 30px; background: rgba(255,17,120,0.15);
+            border: 1px solid rgba(255,17,120,0.3); letter-spacing: 0.5px;
         }
-
-        @media (min-width: 768px) {
-            .dev-role {
-                font-size: 0.95rem;
-                padding: 0.35rem 1.2rem;
-            }
-        }
-
-        .dev-bio {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        @media (min-width: 768px) {
-            .dev-bio {
-                font-size: 0.95rem;
-                margin-bottom: 1.2rem;
-            }
-        }
-
-        .dev-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
+        .dev-bio { color: var(--text-muted); margin: 0.9rem 0 1.1rem; font-size: 0.9rem; }
+        .dev-skills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.1rem; }
         .skill-tag {
-            background: linear-gradient(135deg, var(--surface-light), var(--surface));
-            color: var(--text-muted);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
+            background: var(--surface-light); color: var(--text-muted); padding: 0.4rem 0.95rem;
+            border-radius: 20px; font-size: 0.78rem; font-weight: 500; border: 1px solid var(--border); transition: all 0.3s;
         }
-
-        .skill-tag:hover {
-            background: var(--gradient);
-            color: white;
-            transform: translateY(-2px);
-            border-color: transparent;
+        .skill-tag:hover { background: var(--gradient); color: #fff; transform: translateY(-2px); border-color: transparent; }
+        .dev-links { display: flex; gap: 0.6rem; }
+        .dev-link {
+            width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            background: var(--surface-light); border: 1px solid var(--border); font-size: 1rem; transition: all 0.3s;
         }
+        .dev-link:hover { background: var(--gradient); color: #fff; transform: translateY(-3px); border-color: transparent; }
 
-        @media (min-width: 768px) {
-            .skill-tag {
-                padding: 0.45rem 1rem;
-                font-size: 0.85rem;
-            }
+        /* ===== FAQ ===== */
+        .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.8rem; }
+        .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .faq-item summary {
+            padding: 1rem 1.4rem; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+            display: flex; justify-content: space-between; align-items: center; list-style: none;
         }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after { content: '+'; color: var(--primary); font-size: 1.3rem; font-weight: 700; transition: transform 0.3s; }
+        .faq-item[open] summary::after { transform: rotate(45deg); }
+        .faq-item .faq-body { padding: 0 1.4rem 1.1rem; color: var(--text-muted); font-size: 0.88rem; }
 
-        .visualizer-container {
-            height: 80px;
-            width: 100%;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 3px;
-            padding: 0 8px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-        }
-
-        @media (min-width: 640px) {
-            .visualizer-container {
-                height: 100px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .visualizer-container {
-                height: 120px;
-                gap: 4px;
-                padding: 0 10px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .visualizer-container {
-                height: 150px;
-            }
-        }
-
-        .visualizer-bar {
-            background: var(--gradient);
-            border-radius: 2px 2px 0 0;
-            transition: height 0.1s ease-out;
-            min-width: 2px;
-            flex: 1;
-            max-width: 4px;
-        }
-
-        @media (min-width: 640px) {
-            .visualizer-bar {
-                min-width: 3px;
-                max-width: 5px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .visualizer-bar {
-                min-width: 3px;
-                max-width: 6px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .visualizer-bar {
-                min-width: 4px;
-                max-width: 8px;
-            }
-        }
-
-        .screenshot-section {
-            text-align: center;
-        }
-
-        .screenshot-container {
-            max-width: 280px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        @media (min-width: 640px) {
-            .screenshot-container {
-                max-width: 320px;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .screenshot-container {
-                max-width: 350px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .screenshot-container {
-                max-width: 400px;
-            }
-        }
-
-        .screenshot-frame {
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .screenshot-frame:hover {
-            transform: scale(1.02);
-            box-shadow: 0 30px 60px rgba(255, 17, 120, 0.2);
-        }
-
-        .screenshot-frame img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 24px;
-        }
-
-        .screenshot-label {
-            margin-top: 0.8rem;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        @media (min-width: 768px) {
-            .screenshot-label {
-                margin-top: 1.5rem;
-                font-size: 1.1rem;
-            }
-        }
-
-        .install-steps {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 0.5rem;
-        }
-
-        .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-            background: var(--surface-light);
-            padding: 0.8rem;
-            border-radius: var(--radius);
-            border-left: 4px solid var(--primary);
-            transition: all 0.3s ease;
-        }
-
-        .step:hover {
-            transform: translateX(5px);
-            border-left-color: var(--accent);
-            background: linear-gradient(135deg, var(--surface-light), rgba(255, 17, 120, 0.05));
-        }
-
-        @media (min-width: 640px) {
-            .step {
-                gap: 1rem;
-                padding: 1rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .step {
-                margin-bottom: 1.5rem;
-                padding: 1.5rem;
-            }
-        }
-
-        .step-number {
-            background: var(--gradient);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-        }
-
-        .step:hover .step-number {
-            transform: scale(1.1);
-        }
-
-        @media (min-width: 768px) {
-            .step-number {
-                width: 36px;
-                height: 36px;
-                font-size: 1rem;
-            }
-        }
-
-        .step-content h4 {
-            font-size: clamp(0.9rem, 4vw, 1.1rem);
-            margin-bottom: 0.3rem;
-        }
-
-        .step-content p {
-            color: var(--text-muted);
-            font-size: clamp(0.7rem, 3vw, 0.85rem);
-            margin: 0;
-        }
-
-        @media (min-width: 768px) {
-            .step-content p {
-                font-size: 0.9rem;
-            }
-        }
-
-        .beating-hearts {
-            display: inline-flex;
-            gap: 0.2rem;
-            margin-left: 0.3rem;
-        }
-
-        .beating-hearts i {
-            color: var(--primary);
-            animation: heartbeat 1.5s ease-in-out infinite;
-            font-size: 0.8rem;
-        }
-
-        @media (min-width: 768px) {
-            .beating-hearts i {
-                font-size: 1rem;
-            }
-        }
-
+        /* ===== Footer ===== */
+        footer { padding: 3.5rem 0 2rem; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem; text-align: center; }
+        @media (min-width: 700px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; text-align: left; } }
+        .footer-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.7rem; justify-content: center; }
+        @media (min-width: 700px) { .footer-brand { justify-content: flex-start; } }
+        .footer-brand img { width: 32px; height: 32px; border-radius: 8px; }
+        .footer-col h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.9rem; }
+        .footer-col a { display: block; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.55rem; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--primary); }
+        .footer-bottom { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+        .beating-hearts i { color: var(--primary); animation: heartbeat 1.5s ease-in-out infinite; font-size: 0.85rem; }
         .beating-hearts i:nth-child(2) { animation-delay: 0.2s; }
         .beating-hearts i:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes heartbeat { 0%,100% { transform: scale(1); } 25% { transform: scale(1.3); } 45% { transform: scale(1.15); } }
 
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            25% { transform: scale(1.3); }
-            35% { transform: scale(1); }
-            45% { transform: scale(1.2); }
-            55% { transform: scale(1); }
-        }
-
-        footer {
-            padding: 2.5rem 0 1.5rem;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        @media (min-width: 768px) {
-            footer {
-                padding: 4rem 0 2rem;
-            }
-        }
-
+        /* ===== FAB / Toast / Rhythm ===== */
         .fab {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--gradient);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: var(--shadow-glow);
-            cursor: pointer;
-            z-index: 1000;
-            border: none;
-            transition: all 0.3s;
+            position: fixed; bottom: 20px; right: 20px; width: 52px; height: 52px; border-radius: 50%;
+            background: var(--gradient); color: #fff; display: none; align-items: center; justify-content: center;
+            font-size: 1.3rem; box-shadow: var(--shadow-glow); cursor: pointer; z-index: 1000; border: none; transition: all 0.3s;
         }
-
-        .fab:hover {
-            transform: scale(1.1) translateY(-3px);
-        }
-
-        @media (min-width: 768px) {
-            .fab {
-                bottom: 20px;
-                right: 20px;
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .reveal.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .fab:hover { transform: scale(1.1) translateY(-3px); }
 
         .rhythm-player {
-            position: fixed;
-            bottom: 80px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 999;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s;
-            border: none;
+            position: fixed; bottom: 86px; right: 20px; width: 46px; height: 46px; border-radius: 50%;
+            background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 999; opacity: 0; transform: scale(0); transition: all 0.3s; border: none;
         }
-
-        @media (min-width: 768px) {
-            .rhythm-player {
-                bottom: 100px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-            }
-        }
-
-        .rhythm-player.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .rhythm-player.playing {
-            background: var(--primary);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .logo-playing {
-            animation: logoPulse 2s infinite alternate;
-        }
-
-        @keyframes logoPulse {
-            0% { transform: scale(1); box-shadow: var(--shadow-glow); }
-            100% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 17, 120, 0.5); }
-        }
+        .rhythm-player.show { opacity: 1; transform: scale(1); }
+        .rhythm-player.playing { background: var(--primary); animation: pulse 1s infinite; }
+        @keyframes pulse { 50% { transform: scale(1.1); } }
+        .logo-playing { animation: logoPulse 2s infinite alternate; }
+        @keyframes logoPulse { to { transform: scale(1.05); box-shadow: 0 0 50px rgba(255,17,120,0.5); } }
 
         .download-toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--surface);
-            color: var(--text);
-            padding: 0.7rem 1.2rem;
-            border-radius: 50px;
-            box-shadow: var(--shadow);
-            z-index: 10000;
-            opacity: 0;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
-            white-space: nowrap;
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--surface); color: var(--text); padding: 0.9rem 1.8rem; border-radius: 50px;
+            box-shadow: var(--shadow); z-index: 10000; opacity: 0; transition: all 0.3s;
+            display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; white-space: nowrap;
+            border: 1px solid var(--border);
         }
-
-        @media (min-width: 768px) {
-            .download-toast {
-                bottom: 30px;
-                padding: 1rem 2rem;
-                gap: 0.8rem;
-                font-size: 1rem;
-            }
-        }
-
-        .download-toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
+        .download-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
         .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 6px;
+            display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: var(--primary); animation: spin 1s linear infinite; margin-right: 6px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Loading Animations */
-        .loading-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: var(--gradient);
-            z-index: 10001;
-            animation: loadProgress 1.5s ease-out forwards;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            30% { width: 40%; }
-            60% { width: 75%; }
-            100% { width: 100%; }
-        }
-
-        .logo-container {
-            opacity: 0;
-            transform: scale(0.5) rotate(-10deg);
-            animation: logoPopIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-            animation-delay: 0.2s;
-        }
-
-        @keyframes logoPopIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.5) rotate(-10deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
-        }
-
-        .hero-title {
-            opacity: 0;
-            animation: slideInFromLeft 0.8s ease-out forwards;
-            animation-delay: 0.4s;
-        }
-
-        .hero-subtitle {
-            opacity: 0;
-            animation: slideInFromRight 0.8s ease-out forwards;
-            animation-delay: 0.6s;
-        }
-
-        @keyframes slideInFromLeft {
-            0% {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInFromRight {
-            0% {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .btns {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
-            animation-delay: 0.8s;
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #versionNote {
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out forwards;
-            animation-delay: 1s;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        .btn-primary {
-            animation: btnPulse 1.5s ease-in-out 2;
-            animation-delay: 1.2s;
-        }
-
-        @keyframes btnPulse {
-            0%, 100% {
-                box-shadow: var(--shadow-glow);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(255, 17, 120, 0.3), 0 0 0 20px rgba(255, 17, 120, 0.1);
-                transform: scale(1.05);
-            }
-        }
-
-        .feature-card {
-            opacity: 0;
-            animation: cardReveal 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-        .feature-card:nth-child(4) { animation-delay: 0.4s; }
-        .feature-card:nth-child(5) { animation-delay: 0.5s; }
-        .feature-card:nth-child(6) { animation-delay: 0.6s; }
-        .feature-card:nth-child(7) { animation-delay: 0.7s; }
-
-        @keyframes cardReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .particle {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            animation: particleFloat 1.5s ease-out forwards;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-100px) scale(0);
-            }
-        }
-
-        .visualizer-section {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        .feature-card.reveal {
-            opacity: 0;
-            transform: translateY(40px) scale(0.95);
-            transition: none;
-        }
-
-        .feature-card.reveal.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .platform-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 0 1rem;
-        }
-
-        .platform-tab {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        @media (min-width: 768px) {
-            .platform-tab {
-                font-size: 0.85rem;
-                padding: 0.5rem 1.3rem;
-            }
-        }
-
-        .platform-tab.active {
-            background: var(--gradient);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 6px 16px rgba(255, 17, 120, 0.25);
-        }
-
-        .platform-tab:hover:not(.active) {
-            background: var(--surface-light);
-            transform: translateY(-2px);
-        }
-
-        .portable-link {
-            color: var(--accent);
-            text-decoration: underline;
-            font-weight: 600;
-        }
-
-        .asset-type-badge {
-            font-size: 0.6rem;
-            opacity: 0.85;
-        }
-
+        /* ===== Modal ===== */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: none;
+            align-items: center; justify-content: center; z-index: 2000; opacity: 0; transition: opacity 0.3s;
         }
-
-        .modal-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
-
+        .modal-overlay.show { display: flex; opacity: 1; }
         .modal-content {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: var(--surface); border-radius: var(--radius); padding: 2.2rem;
+            max-width: 500px; width: 90%; border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
         }
-
-        @keyframes modalSlideIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.9) translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .modal-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-header h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .modal-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(-20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-header h2 { font-size: 1.4rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.4rem; }
+        .modal-header p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.4rem; }
+        .modal-options { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.4rem; }
         .modal-option-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.5rem;
-            background: var(--surface-light);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.4rem;
+            background: var(--surface-light); border: 1px solid var(--border); border-radius: 12px; transition: all 0.3s;
         }
-
-        .modal-option-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 17, 120, 0.1), rgba(0, 200, 255, 0.05));
-            border-color: var(--primary);
-            transform: translateX(8px);
-        }
-
-        .modal-option-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .modal-option-icon {
-            width: 45px;
-            height: 45px;
-            background: var(--gradient);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .modal-option-text h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-        }
-
-        .modal-option-text p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .modal-option-size {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
+        .modal-option-btn:hover { border-color: var(--primary); transform: translateX(8px); background: linear-gradient(135deg, rgba(255,17,120,0.1), rgba(0,200,255,0.05)); }
+        .modal-option-left { display: flex; align-items: center; gap: 1rem; }
+        .modal-option-icon { width: 44px; height: 44px; background: var(--gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.15rem; }
+        .modal-option-text h3 { font-size: 0.98rem; margin-bottom: 0.15rem; }
+        .modal-option-text p { font-size: 0.78rem; color: var(--text-muted); }
+        .modal-option-size { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
         .modal-close-btn {
-            width: 100%;
-            padding: 0.8rem;
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            width: 100%; padding: 0.85rem; background: transparent; border: 1px solid var(--border);
+            color: var(--text); border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s;
         }
+        .modal-close-btn:hover { background: var(--surface-light); }
 
-        .modal-close-btn:hover {
-            background: var(--surface-light);
-        }
+        /* ===== Reveal ===== */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2,0.8,0.2,1); }
+        .reveal.show { opacity: 1; transform: translateY(0); }
 
-        @media (min-width: 768px) {
-            .modal-content {
-                padding: 2.5rem;
-            }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .reveal { opacity: 1; transform: none; }
         }
     </style>
 </head>
 <body>
-    <div class="loading-bar"></div>
+    <div class="scroll-progress" id="scrollProgress"></div>
 
-    <button class="theme-toggle" id="themeToggle"><i class="bi bi-moon-stars"></i></button>
-    <audio id="secretAudio" preload="auto" loop style="display: none;"><source src="rhythm.mp3" type="audio/mpeg"></audio>
-    <button class="rhythm-player" id="rhythmPlayer"><i class="bi bi-pause-fill" id="rhythmIcon"></i></button>
-    <div class="download-toast" id="downloadToast"><i class="bi bi-cloud-check"></i><span id="downloadToastMessage"></span></div>
+    <!-- ===== Navbar ===== -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <img src="https://raw.githubusercontent.com/drkvenom786/Airbeats/137e3935198c25bfbd5eef1a050002ed52fa84ff/icon.png" alt="AirBeats logo">
+                AirBeats
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#versions">Releases</a>
+                <a href="#install">Install</a>
+                <a href="#opensource">Open Source</a>
+                <a href="#developers">Team</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://github.com/d0x-dev/AirBeats" target="_blank" rel="noopener noreferrer" class="nav-gh-btn">
+                    <i class="bi bi-github"></i> <span class="star-count" id="navStars"><i class="bi bi-star-fill"></i> —</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="bi bi-moon-stars"></i></button>
+            </div>
+        </div>
+    </nav>
 
-    <div class="modal-overlay" id="downloadModal">
+    <audio id="secretAudio" preload="auto" loop style="display:none;"><source src="rhythm.mp3" type="audio/mpeg"></audio>
+    <button class="rhythm-player" id="rhythmPlayer" aria-label="Toggle music"><i class="bi bi-pause-fill" id="rhythmIcon"></i></button>
+    <div class="download-toast" id="downloadToast" role="status"><i class="bi bi-cloud-check"></i><span id="downloadToastMessage"></span></div>
+
+    <!-- ===== Download Modal ===== -->
+    <div class="modal-overlay" id="downloadModal" role="dialog" aria-modal="true">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Choose Download</h2>
@@ -1830,32 +498,46 @@
         </div>
     </div>
 
+    <!-- ===== Hero ===== -->
     <header>
         <div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div>
-        <div class="container">
+        <div class="container" style="position:relative;z-index:1;">
             <div class="logo-container">
                 <div class="glowing-line"></div>
                 <img src="https://raw.githubusercontent.com/drkvenom786/Airbeats/137e3935198c25bfbd5eef1a050002ed52fa84ff/icon.png" class="app-logo" id="appLogo" alt="AirBeats Logo">
             </div>
+            <div><span class="oss-badge"><i class="bi bi-github"></i> 100% Free &amp; Open Source</span></div>
             <h1 class="hero-title">AirBeats</h1>
             <p class="hero-subtitle">Experience sound like never before. Immerse yourself in crystal-clear audio, personalized playlists, and intuitive controls designed for true music lovers.</p>
             <div class="platform-tabs" id="platformTabs">
                 <button class="platform-tab" data-platform="android"><i class="bi bi-android2"></i> Android</button>
                 <button class="platform-tab" data-platform="windows"><i class="bi bi-windows"></i> Windows</button>
             </div>
-            <div class="btns"><a href="#" class="btn btn-primary" id="downloadBtn"><i class="bi bi-download"></i> <span id="downloadBtnText">Download Latest APK</span></a>
-            <button class="btn btn-secondary" id="copyLinkBtn"><i class="bi bi-link-45deg"></i> Copy Link</button>
-            <button class="btn btn-secondary" id="shareBtn"><i class="bi bi-share"></i> Share</button></div>
+            <div class="btns">
+                <a href="#" class="btn btn-primary" id="downloadBtn"><i class="bi bi-download"></i> <span id="downloadBtnText">Download Latest</span></a>
+                <a href="https://github.com/d0x-dev/AirBeats" target="_blank" rel="noopener noreferrer" class="btn btn-secondary"><i class="bi bi-github"></i> View Source</a>
+                <button class="btn btn-secondary" id="shareBtn"><i class="bi bi-share"></i> Share</button>
+            </div>
             <div class="note" id="versionNote"><span class="loading-spinner"></span> Fetching latest version...</div>
+
+            <div class="gh-stats" id="ghStats">
+                <div class="gh-stat"><i class="bi bi-star-fill"></i> <b id="statStars">—</b> Stars</div>
+                <div class="gh-stat"><i class="bi bi-diagram-2-fill"></i> <b id="statForks">—</b> Forks</div>
+                <div class="gh-stat"><i class="bi bi-cloud-arrow-down-fill"></i> <b id="statDownloads">—</b> Downloads</div>
+                <div class="gh-stat"><i class="bi bi-tag-fill"></i> <b id="statReleases">—</b> Releases</div>
+            </div>
         </div>
     </header>
 
-    <section class="visualizer-section"><div class="container"><div class="visualizer-container" id="visualizer"></div></div></section>
+    <!-- ===== Visualizer ===== -->
+    <section style="padding:2rem 0;"><div class="container"><div class="visualizer-container" id="visualizer" aria-hidden="true"></div></div></section>
 
+    <!-- ===== Features ===== -->
     <section id="features">
         <div class="container">
-            <h2 class="features-title reveal">Premium Features</h2>
-            <div class="features-scroller">
+            <h2 class="section-title reveal">Premium Features</h2>
+            <p class="section-desc reveal">Everything you'd expect from a premium music app, completely free and open source.</p>
+            <div class="features-grid">
                 <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-music-note-beamed"></i></div><h3>Smart Playlists</h3><p>AI-generated playlists that adapt to your mood, activity, and listening history.</p></div>
                 <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-sliders"></i></div><h3>Advanced EQ</h3><p>Customizable 10-band equalizer with presets for every genre and audio device.</p></div>
                 <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-cloud"></i></div><h3>Cloud Sync</h3><p>Sync your music across all devices. Pick up where you left off, anywhere.</p></div>
@@ -1863,18 +545,22 @@
                 <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-moon-stars"></i></div><h3>Dark Theme</h3><p>Beautiful dark interface with OLED optimization for nighttime listening.</p></div>
                 <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-lightning-charge"></i></div><h3>Battery Saver</h3><p>Optimized audio processing that extends battery life by up to 30%.</p></div>
                 <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-headphones"></i></div><h3>Hi-Res Audio</h3><p>Support for lossless formats up to 24-bit/192kHz for studio-quality sound.</p></div>
+                <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-shield-check"></i></div><h3>Privacy First</h3><p>No tracking, no ads, no data collection. Your music habits stay yours.</p></div>
+                <div class="card feature-card reveal"><div class="feature-icon"><i class="bi bi-github"></i></div><h3>Open Source</h3><p>Fully transparent codebase. Audit it, fork it, or contribute on GitHub.</p></div>
             </div>
         </div>
     </section>
 
+    <!-- ===== Version History ===== -->
     <section id="versions">
         <div class="container">
-            <h2 class="features-title reveal">Version History</h2>
+            <h2 class="section-title reveal">Version History</h2>
+            <p class="section-desc reveal">All releases are pulled live from GitHub. Download any version you need.</p>
             <div class="version-master-wrapper reveal">
                 <div class="version-master-container" id="versionMasterContainer">
                     <div class="version-master-header">
                         <div class="version-master-title"><i class="bi bi-clock-history"></i> All Releases <span class="version-badge" id="releaseCountBadge">Loading...</span></div>
-                        <i class="bi bi-chevron-down"></i>
+                        <i class="bi bi-chevron-down chevron"></i>
                     </div>
                     <div class="version-master-content">
                         <div id="compactVersionsList" class="versions-list-compact">Loading releases...</div>
@@ -1884,28 +570,167 @@
         </div>
     </section>
 
-    <section><div class="container"><h2 class="features-title reveal">How to Install</h2><div class="install-steps"><div class="step reveal"><div class="step-number">1</div><div class="step-content"><h4>Download the APK</h4><p>Click the "Download APK" button above to download the AirBeats app file to your Android device.</p></div></div><div class="step reveal"><div class="step-number">2</div><div class="step-content"><h4>Enable Unknown Sources</h4><p>Go to Settings → Security → Unknown Sources and enable installation from unknown sources.</p></div></div><div class="step reveal"><div class="step-number">3</div><div class="step-content"><h4>Install the App</h4><p>Open the downloaded APK file from your notifications or file manager and tap "Install".</p></div></div><div class="step reveal"><div class="step-number">4</div><div class="step-content"><h4>Launch & Enjoy</h4><p>Open AirBeats from your app drawer and start enjoying premium music experience!</p></div></div></div></div></section>
+    <!-- ===== Install ===== -->
+    <section id="install">
+        <div class="container">
+            <h2 class="section-title reveal">How to Install</h2>
+            <p class="section-desc reveal">Get up and running in under a minute.</p>
+            <div class="install-steps">
+                <div class="step reveal"><div class="step-number">1</div><div class="step-content"><h4>Download the App</h4><p>Choose your platform above and click Download. Android users get a signed APK; Windows users can pick Setup or Portable.</p></div></div>
+                <div class="step reveal"><div class="step-number">2</div><div class="step-content"><h4>Allow Installation (Android)</h4><p>Go to Settings → Security → Unknown Sources and enable installation from unknown sources.</p></div></div>
+                <div class="step reveal"><div class="step-number">3</div><div class="step-content"><h4>Install the App</h4><p>Open the downloaded file from your notifications or file manager and follow the prompts.</p></div></div>
+                <div class="step reveal"><div class="step-number">4</div><div class="step-content"><h4>Launch &amp; Enjoy</h4><p>Open AirBeats and start enjoying a premium music experience, free forever!</p></div></div>
+            </div>
+        </div>
+    </section>
 
-    <section><div class="container"><h2 class="features-title reveal">App Preview</h2><div class="screenshot-section"><div class="screenshot-container reveal"><div class="screenshot-frame"><img src="https://raw.githubusercontent.com/drkvenom786/Airbeats/refs/heads/main/sc.png" alt="AirBeats Interface"></div><div class="screenshot-label"></div></div></div></div></section>
+    <!-- ===== Preview ===== -->
+    <section id="preview">
+        <div class="container">
+            <h2 class="section-title reveal">App Preview</h2>
+            <div class="screenshot-container reveal">
+                <div class="screenshot-frame"><img src="https://raw.githubusercontent.com/drkvenom786/Airbeats/refs/heads/main/sc.png" alt="AirBeats app interface screenshot" loading="lazy"></div>
+            </div>
+        </div>
+    </section>
 
-    <section id="developers"><div class="container"><h2 class="features-title reveal">Meet The Team</h2><div class="dev-grid"><div class="card dev-card reveal"><div class="dev-header"><img src="https://avatars.githubusercontent.com/u/218248866" class="dev-avatar"><div class="dev-info"><a href="https://darkboy.pro" target="_blank" rel="noopener noreferrer"><h3>DarkBoy</h3></a><div class="dev-role-container"><span class="dev-role">Lead Developer</span></div><div class="dev-bio">Architect behind AirBeats' core engine. Specializes in audio processing algorithms and performance optimization.</div></div></div><div class="dev-skills"><span class="skill-tag">Kotlin</span><span class="skill-tag">C++</span><span class="skill-tag">Audio DSP</span><span class="skill-tag">Android NDK</span></div></div><div class="card dev-card reveal"><div class="dev-header"><img src="https://avatars.githubusercontent.com/u/227567962" class="dev-avatar"><div class="dev-info"><a href="https://venomxhub.netlify.app" target="_blank" rel="noopener noreferrer"><h3>VENOM</h3></a><div class="dev-role-container"><span class="dev-role">UI/UX Specialist</span></div><div class="dev-bio">Crafts intuitive and beautiful interfaces with attention to animations and accessibility.</div></div></div><div class="dev-skills"><span class="skill-tag">UI Design</span><span class="skill-tag">Motion Design</span><span class="skill-tag">Figma</span><span class="skill-tag">Accessibility</span></div></div></div></div></section>
+    <!-- ===== Open Source ===== -->
+    <section id="opensource">
+        <div class="container">
+            <h2 class="section-title reveal">Proudly Open Source</h2>
+            <div class="oss-card reveal">
+                <i class="bi bi-github gh-icon"></i>
+                <h3>Built in the Open</h3>
+                <p>AirBeats is developed transparently on GitHub. Star the repo to support the project, report bugs, request features, or submit pull requests. Every contribution counts!</p>
+                <div class="oss-actions">
+                    <a href="https://github.com/d0x-dev/AirBeats" target="_blank" rel="noopener noreferrer" class="btn btn-primary"><i class="bi bi-star-fill"></i> Star on GitHub</a>
+                    <a href="https://github.com/d0x-dev/AirBeats/issues" target="_blank" rel="noopener noreferrer" class="btn btn-secondary"><i class="bi bi-bug"></i> Report an Issue</a>
+                    <a href="https://github.com/d0x-dev/AirBeats/fork" target="_blank" rel="noopener noreferrer" class="btn btn-secondary"><i class="bi bi-diagram-2"></i> Fork the Repo</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- ===== Developers ===== -->
+    <section id="developers">
+        <div class="container">
+            <h2 class="section-title reveal">Meet The Team</h2>
+            <p class="section-desc reveal">The developers behind AirBeats.</p>
+            <div class="dev-grid">
+                <div class="card dev-card reveal">
+                    <div class="dev-header">
+                        <img src="https://avatars.githubusercontent.com/u/218248866" class="dev-avatar" alt="DarkBoy avatar" loading="lazy">
+                        <div class="dev-info">
+                            <h3><a href="https://darkboy.pro" target="_blank" rel="noopener noreferrer">DarkBoy</a></h3>
+                            <span class="dev-role">Lead Developer</span>
+                        </div>
+                    </div>
+                    <p class="dev-bio">Architect behind AirBeats' core engine. Specializes in audio processing algorithms and performance optimization.</p>
+                    <div class="dev-skills">
+                        <span class="skill-tag">Kotlin</span><span class="skill-tag">C++</span>
+                        <span class="skill-tag">Audio DSP</span><span class="skill-tag">Android NDK</span>
+                    </div>
+                    <div class="dev-links">
+                        <a href="https://github.com/d0x-dev" target="_blank" rel="noopener noreferrer" class="dev-link" aria-label="DarkBoy on GitHub"><i class="bi bi-github"></i></a>
+                        <a href="https://darkboy.pro" target="_blank" rel="noopener noreferrer" class="dev-link" aria-label="DarkBoy website"><i class="bi bi-globe2"></i></a>
+                    </div>
+                </div>
+                <div class="card dev-card reveal">
+                    <div class="dev-header">
+                        <img src="https://avatars.githubusercontent.com/u/227567962" class="dev-avatar" alt="VENOM avatar" loading="lazy">
+                        <div class="dev-info">
+                            <h3><a href="https://venomxhub.netlify.app" target="_blank" rel="noopener noreferrer">VENOM</a></h3>
+                            <span class="dev-role">UI/UX Specialist</span>
+                        </div>
+                    </div>
+                    <p class="dev-bio">Crafts intuitive and beautiful interfaces with attention to animations and accessibility.</p>
+                    <div class="dev-skills">
+                        <span class="skill-tag">UI Design</span><span class="skill-tag">Motion Design</span>
+                        <span class="skill-tag">Figma</span><span class="skill-tag">Accessibility</span>
+                    </div>
+                    <div class="dev-links">
+                        <a href="https://github.com/drkvenom786" target="_blank" rel="noopener noreferrer" class="dev-link" aria-label="VENOM on GitHub"><i class="bi bi-github"></i></a>
+                        <a href="https://venomxhub.netlify.app" target="_blank" rel="noopener noreferrer" class="dev-link" aria-label="VENOM website"><i class="bi bi-globe2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section id="faq">
+        <div class="container">
+            <h2 class="section-title reveal">Frequently Asked Questions</h2>
+            <div class="faq-list reveal">
+                <details class="faq-item">
+                    <summary>Is AirBeats really free?</summary>
+                    <div class="faq-body">Yes. AirBeats is 100% free and open source with no ads, subscriptions, or hidden costs.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Which platforms are supported?</summary>
+                    <div class="faq-body">Android 8.0+ (signed APK) and Windows 10/11 (Setup installer or Portable version).</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Is the APK safe to install?</summary>
+                    <div class="faq-body">All releases are built and signed from the public source code on GitHub. You can audit the code yourself or build it from source.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>How can I contribute?</summary>
+                    <div class="faq-body">Fork the repository on GitHub, make your changes, and open a pull request. Bug reports and feature requests via GitHub Issues are also welcome.</div>
+                </details>
+                <details class="faq-item">
+                    <summary>Where do I report bugs?</summary>
+                    <div class="faq-body">Open an issue at github.com/d0x-dev/AirBeats/issues with details about your device and the problem.</div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
     <footer>
         <div class="container">
-            <p class="note">© 2025 AirBeats. All Rights Reserved.
-            <br>
-                <span class="beating-hearts"><i class="bi bi-heart-fill"></i><i class="bi bi-heart-fill"></i><i class="bi bi-heart-fill"></i></span>
-            </p>
-            <p class="note">Made with <i class="bi bi-heart-fill" style="color: var(--primary);"></i> by DarkBoy & Venom</p>
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">
+                        <img src="https://raw.githubusercontent.com/drkvenom786/Airbeats/137e3935198c25bfbd5eef1a050002ed52fa84ff/icon.png" alt="">
+                        AirBeats
+                    </div>
+                    <p class="note">Free, open-source music for everyone.<br>
+                    <span class="beating-hearts"><i class="bi bi-heart-fill"></i><i class="bi bi-heart-fill"></i><i class="bi bi-heart-fill"></i></span></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Project</h4>
+                    <a href="#features">Features</a>
+                    <a href="#versions">Releases</a>
+                    <a href="#install">Install Guide</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <a href="https://github.com/d0x-dev/AirBeats" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+                    <a href="https://github.com/d0x-dev/AirBeats/issues" target="_blank" rel="noopener noreferrer">Issue Tracker</a>
+                    <a href="https://github.com/d0x-dev/AirBeats/releases" target="_blank" rel="noopener noreferrer">All Releases</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="note">© 2025 AirBeats. Open Source Software.</p>
+                <p class="note">Made with <i class="bi bi-heart-fill" style="color:var(--primary);"></i> by DarkBoy &amp; VENOM</p>
+            </div>
         </div>
     </footer>
-    <button class="fab" id="backToTop"><i class="bi bi-arrow-up"></i></button>
+
+    <button class="fab" id="backToTop" aria-label="Back to top"><i class="bi bi-arrow-up"></i></button>
 
     <script>
+        // ================= Config =================
+        const GH_OWNER = 'd0x-dev';
+        const GH_REPO = 'AirBeats';
+        const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
+
+        // ================= Elements =================
         const themeToggle = document.getElementById('themeToggle');
         const downloadBtn = document.getElementById('downloadBtn');
         const downloadBtnText = document.getElementById('downloadBtnText');
-        const copyLinkBtn = document.getElementById('copyLinkBtn');
         const shareBtn = document.getElementById('shareBtn');
         const backToTop = document.getElementById('backToTop');
         const downloadToast = document.getElementById('downloadToast');
@@ -1921,158 +746,72 @@
         const versionMasterContainer = document.getElementById('versionMasterContainer');
         const masterHeader = document.querySelector('.version-master-header');
         const platformTabs = document.getElementById('platformTabs');
+        const scrollProgress = document.getElementById('scrollProgress');
 
-        let isPlaying = false;
-        let audioLoaded = false;
-        let isLooping = true;
-        let latestRelease = null;
-        let allReleases = [];
+        let isPlaying = false, audioLoaded = false;
+        let latestRelease = null, allReleases = [];
 
+        // ================= Platform detection =================
         function detectPlatform() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-            if (/Windows/i.test(ua)) return 'windows';
-            return 'android';
+            return /Windows/i.test(navigator.userAgent || '') ? 'windows' : 'android';
         }
         let currentPlatform = detectPlatform();
 
         function setPlatform(p) {
             currentPlatform = p;
-            document.querySelectorAll('.platform-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.platform === p));
+            document.querySelectorAll('.platform-tab').forEach(b => b.classList.toggle('active', b.dataset.platform === p));
             updateMainButton();
             renderCompactVersionList();
         }
+        platformTabs.querySelectorAll('.platform-tab').forEach(btn =>
+            btn.addEventListener('click', () => setPlatform(btn.dataset.platform)));
+        setPlatform(currentPlatform);
 
-        if (platformTabs) {
-            platformTabs.querySelectorAll('.platform-tab').forEach(btn => {
-                btn.addEventListener('click', () => setPlatform(btn.dataset.platform));
-            });
-            document.querySelectorAll('.platform-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.platform === currentPlatform));
+        // ================= GitHub stats =================
+        function formatNum(n) {
+            if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+            if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k';
+            return String(n);
         }
 
-        function createParticles() {
-            for(let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * window.innerWidth + 'px';
-                particle.style.top = Math.random() * window.innerHeight + 'px';
-                particle.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
-                particle.style.width = Math.random() * 6 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = Math.random() * 0.5 + 's';
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1500);
-            }
+        async function fetchRepoStats() {
+            try {
+                const res = await fetch(GH_API);
+                if (!res.ok) return;
+                const repo = await res.json();
+                document.getElementById('statStars').textContent = formatNum(repo.stargazers_count || 0);
+                document.getElementById('statForks').textContent = formatNum(repo.forks_count || 0);
+                document.getElementById('navStars').innerHTML = `<i class="bi bi-star-fill"></i> ${formatNum(repo.stargazers_count || 0)}`;
+            } catch (e) { /* silent */ }
         }
 
-        window.addEventListener('load', () => {
-            setTimeout(createParticles, 100);
-        });
-
-        if (masterHeader) {
-            masterHeader.addEventListener('click', (e) => {
-                e.stopPropagation();
-                versionMasterContainer.classList.toggle('open');
-            });
-        }
-
-        function showDownloadToastMsg(msg) { toastMsg.textContent = msg; downloadToast.classList.add('show'); setTimeout(() => downloadToast.classList.remove('show'), 3000); }
-
-        function showDownloadModal() {
-            const modal = document.getElementById('downloadModal');
-            const modalOptions = document.getElementById('modalOptions');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalSubtitle = document.getElementById('modalSubtitle');
-            
-            modalOptions.innerHTML = '';
-            
-            if (currentPlatform === 'windows') {
-                modalTitle.textContent = 'Download AirBeats for Windows';
-                modalSubtitle.textContent = `v${latestRelease.tag_name}`;
-                
-                const setupAsset = latestRelease.assets.find(a => /setup/i.test(a.name) && /\.exe$/i.test(a.name));
-                const portableAsset = latestRelease.assets.find(a => /portable|potable/i.test(a.name) && /\.exe$/i.test(a.name));
-                
-                if (setupAsset) {
-                    const size = (setupAsset.size / (1024 * 1024)).toFixed(2);
-                    modalOptions.innerHTML += `
-                        <a href="${setupAsset.browser_download_url}" class="modal-option-btn" onclick="showDownloadToastMsg('Downloading Setup installer...')">
-                            <div class="modal-option-left">
-                                <div class="modal-option-icon"><i class="bi bi-windows"></i></div>
-                                <div class="modal-option-text">
-                                    <h3>Setup Installer</h3>
-                                    <p>Full installer with auto-updates</p>
-                                </div>
-                            </div>
-                            <div class="modal-option-size">${size} MB</div>
-                        </a>
-                    `;
-                }
-                
-                if (portableAsset) {
-                    const size = (portableAsset.size / (1024 * 1024)).toFixed(2);
-                    modalOptions.innerHTML += `
-                        <a href="${portableAsset.browser_download_url}" class="modal-option-btn" onclick="showDownloadToastMsg('Downloading Portable version...')">
-                            <div class="modal-option-left">
-                                <div class="modal-option-icon"><i class="bi bi-box-seam"></i></div>
-                                <div class="modal-option-text">
-                                    <h3>Portable Version</h3>
-                                    <p>Run without installation</p>
-                                </div>
-                            </div>
-                            <div class="modal-option-size">${size} MB</div>
-                        </a>
-                    `;
-                }
-            } else {
-                modalTitle.textContent = 'Download AirBeats for Android';
-                modalSubtitle.textContent = `v${latestRelease.tag_name}`;
-                
-                const apkAsset = latestRelease.assets.find(a => /\.apk$/i.test(a.name));
-                
-                if (apkAsset) {
-                    const size = (apkAsset.size / (1024 * 1024)).toFixed(2);
-                    modalOptions.innerHTML += `
-                        <a href="${apkAsset.browser_download_url}" class="modal-option-btn" onclick="showDownloadToastMsg('Downloading APK...')">
-                            <div class="modal-option-left">
-                                <div class="modal-option-icon"><i class="bi bi-android2"></i></div>
-                                <div class="modal-option-text">
-                                    <h3>Android APK</h3>
-                                    <p>Signed APK for Android 8.0+</p>
-                                </div>
-                            </div>
-                            <div class="modal-option-size">${size} MB</div>
-                        </a>
-                    `;
-                }
-            }
-            
-            modal.classList.add('show');
-        }
-
+        // ================= Releases =================
         async function fetchAllReleases() {
             try {
-                const possibleUrls = ["https://api.github.com/repos/d0x-dev/Airbeats/releases", "https://api.github.com/repos/d0x-dev/AirBeats/releases"];
-                let data = null;
-                for (const url of possibleUrls) {
-                    try { const res = await fetch(url); if (res.ok) { data = await res.json(); break; } } catch(e) {}
-                }
-                if (!data) throw new Error("Fallback");
-                allReleases = data.sort((a,b)=> new Date(b.published_at) - new Date(a.published_at));
-                latestRelease = allReleases[0];
-                renderCompactVersionList();
-                updateMainButton();
+                const res = await fetch(`${GH_API}/releases?per_page=100`);
+                if (!res.ok) throw new Error('fetch failed');
+                const data = await res.json();
+                if (!Array.isArray(data) || !data.length) throw new Error('empty');
+                allReleases = data.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
             } catch (error) {
+                // Fallback data if API is unreachable / rate-limited
                 allReleases = [
-                    { tag_name: "v3.1.0", name: "V3.1.0", published_at: "2026-02-10T08:43:16Z", prerelease: false, body: "Experience sound like never before. Immerse yourself in crystal-clear audio, personalized playlists, and intuitive controls designed for true music lovers. Now with enhanced offline caching!", assets: [{ name: "AirBeats_v3.1.0_signed.apk", size: 8418389, browser_download_url: "#" }] },
-                    { tag_name: "v2.0.10", name: "V2.0.10", published_at: "2026-02-10T08:57:57Z", prerelease: true, body: "Experience sound like never before. Immerse yourself in crystal-clear audio, personalized playlists, and intuitive controls designed for true music lovers. Now with enhanced offline caching!", assets: [{ name: "AirBeats_v2.0.10_signed.apk", size: 34128498, browser_download_url: "#" }] }
+                    { tag_name: "v3.1.0", published_at: "2026-02-10T08:43:16Z", prerelease: false,
+                      body: "Enhanced offline caching, improved EQ presets and performance fixes.",
+                      assets: [{ name: "AirBeats_v3.1.0_signed.apk", size: 8418389, browser_download_url: `https://github.com/${GH_OWNER}/${GH_REPO}/releases` }] }
                 ];
-                latestRelease = allReleases[0];
-                renderCompactVersionList();
-                updateMainButton();
             }
-        }
+            latestRelease = allReleases[0];
 
-        function isAssetName(name, re) { return !!(name && re.test(name)); }
+            // Total downloads across all release assets
+            const totalDl = allReleases.reduce((sum, r) =>
+                sum + (r.assets || []).reduce((s, a) => s + (a.download_count || 0), 0), 0);
+            document.getElementById('statDownloads').textContent = formatNum(totalDl);
+            document.getElementById('statReleases').textContent = allReleases.length;
+
+            renderCompactVersionList();
+            updateMainButton();
+        }
 
         function getAssetIconAndLabel(name) {
             const n = (name || '').toLowerCase();
@@ -2083,124 +822,134 @@
             return { icon: 'bi-file-earmark-arrow-down', label: 'Download' };
         }
 
-        function renderCompactVersionList() {
-            if (!compactList) return;
-            
-            let filteredReleases = allReleases;
-            
-            // Filter releases by platform
-            if (currentPlatform === 'windows') {
-                filteredReleases = allReleases.filter(rel => {
-                    const hasExe = rel.assets && rel.assets.some(a => /\.exe$/i.test(a.name));
-                    return hasExe;
-                });
-            } else {
-                filteredReleases = allReleases.filter(rel => {
-                    const hasApk = rel.assets && rel.assets.some(a => /\.apk$/i.test(a.name));
-                    return hasApk;
-                });
-            }
-            
-            releaseCountBadge.textContent = `${filteredReleases.length} releases`;
-            if (filteredReleases.length === 0) { compactList.innerHTML = `<div class="note">No ${currentPlatform} releases found.</div>`; return; }
-            let html = '';
-            filteredReleases.forEach(rel => {
-                const versionTag = rel.tag_name || 'v?.?.?';
-                const pubDate = rel.published_at ? new Date(rel.published_at).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : 'Unknown';
-                const isPre = rel.prerelease || false;
-                const notes = rel.body ? rel.body.split('\n').filter(l=>l.trim())[0] || 'Feature release' : 'Feature release';
-                
-                let downloadableAssets = [];
-                if (currentPlatform === 'windows') {
-                    downloadableAssets = (rel.assets || []).filter(a => a.name && /\.exe$/i.test(a.name));
-                } else {
-                    downloadableAssets = (rel.assets || []).filter(a => a.name && /\.apk$/i.test(a.name));
-                }
-                
-                let assetButtons = '';
-                if (downloadableAssets.length === 0) {
-                    assetButtons = '<span class="note" style="font-size:0.65rem;">No downloadable build</span>';
-                } else {
-                    downloadableAssets.forEach(asset => {
-                        const { icon, label } = getAssetIconAndLabel(asset.name);
-                        const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
-                        assetButtons += `<a href="${asset.browser_download_url}" class="download-sm-btn" data-version="${versionTag}" data-label="${label}"><i class="bi ${icon}"></i> ${label} <span class="asset-type-badge">(${fileSize} MB)</span></a>`;
-                    });
-                }
-                html += `
-                    <div class="version-compact-item">
-                        <div class="version-compact-header">
-                            <span class="version-tag-sm ${isPre ? 'prerelease' : ''}">${versionTag} ${isPre ? 'Pre-release' : ''}</span>
-                            <span class="version-date-sm">${pubDate}</span>
-                        </div>
-                        <div class="version-notes-preview">✨ ${notes.substring(0, 100)}</div>
-                        <div class="version-download-sm">
-                            ${assetButtons}
-                        </div>
-                    </div>
-                `;
-            });
-            compactList.innerHTML = html;
-            document.querySelectorAll('.download-sm-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => { e.stopPropagation(); if(btn.getAttribute('href') !== '#') showDownloadToastMsg(`Downloading ${btn.getAttribute('data-label')} (${btn.getAttribute('data-version')})...`); });
-            });
-        }
-
         function getAssetsByPlatform(release, platform) {
             if (!release || !release.assets) return [];
-            if (platform === 'windows') {
-                return release.assets.filter(a => a.name && /\.exe$/i.test(a.name));
+            const re = platform === 'windows' ? /\.exe$/i : /\.apk$/i;
+            return release.assets.filter(a => a.name && re.test(a.name));
+        }
+
+        function renderCompactVersionList() {
+            if (!compactList || !allReleases.length) return;
+            const re = currentPlatform === 'windows' ? /\.exe$/i : /\.apk$/i;
+            const filtered = allReleases.filter(r => (r.assets || []).some(a => re.test(a.name)));
+
+            releaseCountBadge.textContent = `${filtered.length} releases`;
+            if (!filtered.length) {
+                compactList.innerHTML = `<div class="note">No ${currentPlatform} releases found.</div>`;
+                return;
             }
-            return release.assets.filter(a => a.name && /\.apk$/i.test(a.name));
+
+            compactList.innerHTML = filtered.map(rel => {
+                const tag = rel.tag_name || 'v?.?.?';
+                const date = rel.published_at ? new Date(rel.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Unknown';
+                const notes = (rel.body || 'Feature release').split('\n').find(l => l.trim()) || 'Feature release';
+                const assets = (rel.assets || []).filter(a => re.test(a.name));
+                const buttons = assets.map(a => {
+                    const { icon, label } = getAssetIconAndLabel(a.name);
+                    const mb = (a.size / 1048576).toFixed(2);
+                    return `<a href="${a.browser_download_url}" class="download-sm-btn" data-version="${tag}" data-label="${label}"><i class="bi ${icon}"></i> ${label} <span class="asset-type-badge">(${mb} MB)</span></a>`;
+                }).join('');
+                return `
+                    <div class="version-compact-item">
+                        <div class="version-compact-header">
+                            <span class="version-tag-sm">${tag}${rel.prerelease ? ' · Pre-release' : ''}</span>
+                            <span class="version-date-sm">${date}</span>
+                        </div>
+                        <div class="version-notes-preview">✨ ${notes.substring(0, 110)}</div>
+                        <div class="version-download-sm">${buttons}</div>
+                    </div>`;
+            }).join('');
+
+            compactList.querySelectorAll('.download-sm-btn').forEach(btn =>
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    showToast(`Downloading ${btn.dataset.label} (${btn.dataset.version})...`);
+                }));
         }
 
         function updateMainButton() {
             if (!latestRelease) return;
             const assets = getAssetsByPlatform(latestRelease, currentPlatform);
-
             if (currentPlatform === 'windows') {
-                if (assets.length > 0) {
-                    downloadBtn.href = '#';
-                    downloadBtnText.textContent = 'Download .exe';
-                    versionNote.innerHTML = `Windows 10/11 · Latest: ${latestRelease.tag_name}`;
-                } else {
-                    downloadBtn.href = '#';
-                    versionNote.innerHTML = `Windows build not available for ${latestRelease.tag_name}`;
-                }
+                downloadBtnText.textContent = 'Download for Windows';
+                versionNote.innerHTML = assets.length
+                    ? `Windows 10/11 · Latest: <b>${latestRelease.tag_name}</b>`
+                    : `Windows build not available for ${latestRelease.tag_name}`;
             } else {
-                if (assets.length > 0) {
-                    downloadBtn.href = '#';
-                    downloadBtnText.textContent = 'Download APK';
-                    versionNote.innerHTML = `Android 8.0+ · Secure APK · Latest: ${latestRelease.tag_name}`;
-                } else {
-                    downloadBtn.href = '#';
-                    versionNote.innerHTML = `Android build not available for ${latestRelease.tag_name}`;
-                }
+                downloadBtnText.textContent = 'Download APK';
+                versionNote.innerHTML = assets.length
+                    ? `Android 8.0+ · Signed APK · Latest: <b>${latestRelease.tag_name}</b>`
+                    : `Android build not available for ${latestRelease.tag_name}`;
             }
-
             try {
-                const jsonLd = JSON.parse(document.getElementById('json-ld').textContent);
-                jsonLd.softwareVersion = latestRelease.tag_name;
-                jsonLd.downloadUrl = window.location.href;
-                jsonLd.operatingSystem = currentPlatform === 'windows' ? 'Windows' : 'Android';
-                document.getElementById('json-ld').textContent = JSON.stringify(jsonLd);
-            } catch(e) {}
+                const ld = JSON.parse(document.getElementById('json-ld').textContent);
+                ld.softwareVersion = latestRelease.tag_name;
+                document.getElementById('json-ld').textContent = JSON.stringify(ld);
+            } catch (e) {}
         }
 
-        function setTheme(theme) { document.documentElement.setAttribute('data-theme', theme); localStorage.setItem('theme', theme); themeToggle.innerHTML = theme === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>'; }
-        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); setTheme(savedTheme);
-        themeToggle.addEventListener('click', () => { const cur = document.documentElement.getAttribute('data-theme'); setTheme(cur === 'dark' ? 'light' : 'dark'); });
-        downloadBtn.addEventListener('click', (e) => {
+        // ================= Download modal =================
+        function showDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            const options = document.getElementById('modalOptions');
+            document.getElementById('modalTitle').textContent =
+                `Download AirBeats for ${currentPlatform === 'windows' ? 'Windows' : 'Android'}`;
+            document.getElementById('modalSubtitle').textContent = latestRelease.tag_name;
+
+            const assets = getAssetsByPlatform(latestRelease, currentPlatform);
+            options.innerHTML = assets.length ? assets.map(a => {
+                const { icon, label } = getAssetIconAndLabel(a.name);
+                const mb = (a.size / 1048576).toFixed(2);
+                const desc = /setup/i.test(a.name) ? 'Full installer with auto-updates'
+                    : /portable|potable/i.test(a.name) ? 'Run without installation'
+                    : 'Signed build for Android 8.0+';
+                return `
+                    <a href="${a.browser_download_url}" class="modal-option-btn">
+                        <div class="modal-option-left">
+                            <div class="modal-option-icon"><i class="bi ${icon}"></i></div>
+                            <div class="modal-option-text"><h3>${label}</h3><p>${desc}</p></div>
+                        </div>
+                        <div class="modal-option-size">${mb} MB</div>
+                    </a>`;
+            }).join('') : `<p class="note">No ${currentPlatform} build available for this release. <a class="portable-link" href="https://github.com/${GH_OWNER}/${GH_REPO}/releases" target="_blank" rel="noopener noreferrer">View all releases on GitHub</a>.</p>`;
+
+            options.querySelectorAll('.modal-option-btn').forEach(btn =>
+                btn.addEventListener('click', () => showToast('Download started...')));
+            modal.classList.add('show');
+        }
+
+        downloadBtn.addEventListener('click', e => {
             e.preventDefault();
-            if (!latestRelease) return;
-            showDownloadModal();
+            if (latestRelease) showDownloadModal();
         });
-        copyLinkBtn.addEventListener('click', () => { if(downloadBtn.href !== '#') navigator.clipboard.writeText(downloadBtn.href); showDownloadToastMsg("Link copied!"); });
+        document.getElementById('downloadModal').addEventListener('click', e => {
+            if (e.target.id === 'downloadModal') e.target.classList.remove('show');
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') document.getElementById('downloadModal').classList.remove('show');
+        });
 
-        // ========== ENHANCED SHARE WITH ICON (sends both message and app icon) ==========
+        // ================= Toast =================
+        let toastTimer;
+        function showToast(msg) {
+            toastMsg.textContent = msg;
+            downloadToast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => downloadToast.classList.remove('show'), 3000);
+        }
+
+        // ================= Theme =================
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeToggle.innerHTML = theme === 'dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon-stars"></i>';
+        }
+        setTheme(localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+        themeToggle.addEventListener('click', () =>
+            setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+        // ================= Share =================
         const appIconUrl = "https://raw.githubusercontent.com/drkvenom786/Airbeats/137e3935198c25bfbd5eef1a050002ed52fa84ff/icon.png";
-
-        // Your exact requested share message with perfect formatting and emojis
         const shareMessage = `🎧 Step into the future of music ✨
 AirBeats brings you seamless streaming & pure vibes 🔥
 
@@ -2210,75 +959,87 @@ AirBeats brings you seamless streaming & pure vibes 🔥
         shareBtn.addEventListener('click', async () => {
             if (navigator.share) {
                 try {
-                    // Fetch the app icon as a blob to attach as a file
-                    const response = await fetch(appIconUrl);
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        const file = new File([blob], 'airbeats-icon.png', { type: 'image/png' });
-
-                        // Try to share with the icon file (this sends the image along with the message)
-                        await navigator.share({
-                            title: 'AirBeats - Future of Music',
-                            text: shareMessage,
-                            url: window.location.href,
-                            files: [file]
-                        });
-                        showDownloadToastMsg("✨ Shared with AirBeats icon!");
+                    const res = await fetch(appIconUrl);
+                    if (res.ok) {
+                        const file = new File([await res.blob()], 'airbeats-icon.png', { type: 'image/png' });
+                        await navigator.share({ title: 'AirBeats - Future of Music', text: shareMessage, url: location.href, files: [file] });
+                        showToast('✨ Shared!');
                         return;
                     }
-                } catch (shareError) {
-                    console.warn("Share with file failed, trying text-only share", shareError);
-                }
-
-                // Fallback: share without file but still with the message and URL
+                } catch (e) { /* fall through */ }
                 try {
-                    await navigator.share({
-                        title: 'AirBeats - Future of Music',
-                        text: shareMessage,
-                        url: window.location.href
-                    });
+                    await navigator.share({ title: 'AirBeats - Future of Music', text: shareMessage, url: location.href });
                 } catch (err) {
-                    if (err.name !== "AbortError") showDownloadToastMsg("Sharing cancelled");
+                    if (err.name !== 'AbortError') showToast('Sharing cancelled');
                 }
             } else {
-                // For browsers without Web Share API, copy to clipboard with full message + URL
-                const fullShareText = `${shareMessage}\n\n${window.location.href}`;
-                navigator.clipboard.writeText(fullShareText);
-                showDownloadToastMsg("📋 Link & message copied to clipboard!");
+                navigator.clipboard.writeText(`${shareMessage}\n\n${location.href}`);
+                showToast('📋 Link & message copied!');
             }
         });
 
-        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        window.addEventListener('scroll', () => backToTop.style.display = window.scrollY > 500 ? 'flex' : 'none');
+        // ================= Scroll (progress + back to top) =================
+        window.addEventListener('scroll', () => {
+            const max = document.documentElement.scrollHeight - innerHeight;
+            scrollProgress.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+            backToTop.style.display = scrollY > 500 ? 'flex' : 'none';
+        }, { passive: true });
+        backToTop.addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
 
-        function loadAudio() { if (!audioLoaded) { secretAudio.loop = isLooping; secretAudio.load(); audioLoaded = true; } }
-        function playRhythm() { loadAudio(); secretAudio.play().then(()=>{ isPlaying=true; rhythmPlayer.classList.add('playing'); rhythmIcon.className='bi bi-pause-fill'; appLogo.classList.add('logo-playing'); }).catch(e=>{}); }
-        function pauseRhythm() { secretAudio.pause(); isPlaying=false; rhythmPlayer.classList.remove('playing'); appLogo.classList.remove('logo-playing'); rhythmIcon.className='bi bi-play-fill'; }
-        function toggleRhythm() { isPlaying ? pauseRhythm() : playRhythm(); }
+        // ================= Rhythm player =================
+        function playRhythm() {
+            if (!audioLoaded) { secretAudio.load(); audioLoaded = true; }
+            secretAudio.play().then(() => {
+                isPlaying = true;
+                rhythmPlayer.classList.add('playing', 'show');
+                rhythmIcon.className = 'bi bi-pause-fill';
+                appLogo.classList.add('logo-playing');
+            }).catch(() => {});
+        }
+        function pauseRhythm() {
+            secretAudio.pause();
+            isPlaying = false;
+            rhythmPlayer.classList.remove('playing');
+            appLogo.classList.remove('logo-playing');
+            rhythmIcon.className = 'bi bi-play-fill';
+        }
+        const toggleRhythm = () => isPlaying ? pauseRhythm() : playRhythm();
+        appLogo.addEventListener('click', toggleRhythm);
+        rhythmPlayer.addEventListener('click', toggleRhythm);
 
-        appLogo.addEventListener('click', (e) => { e.stopPropagation(); toggleRhythm(); });
-        rhythmPlayer.addEventListener('click', (e) => { e.stopPropagation(); toggleRhythm(); });
-
+        // ================= Visualizer =================
         function createVisualizer() {
             visualizer.innerHTML = '';
-            const barCount = window.innerWidth < 480 ? 20 : window.innerWidth < 768 ? 30 : 45;
-            for(let i=0;i<barCount;i++) { let bar = document.createElement('div'); bar.className='visualizer-bar'; visualizer.appendChild(bar); }
-            function animate(){ document.querySelectorAll('.visualizer-bar').forEach((bar,i)=>{ let wave = Math.sin(Date.now()*0.003 + i*0.2)*0.5+0.5; bar.style.height = `${15+wave*75}%`; }); requestAnimationFrame(animate); }
-            animate();
+            const count = innerWidth < 480 ? 24 : innerWidth < 768 ? 34 : 50;
+            for (let i = 0; i < count; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'visualizer-bar';
+                visualizer.appendChild(bar);
+            }
+        }
+        function animateVisualizer() {
+            document.querySelectorAll('.visualizer-bar').forEach((bar, i) => {
+                const wave = Math.sin(Date.now() * 0.003 + i * 0.2) * 0.5 + 0.5;
+                bar.style.height = `${15 + wave * 75}%`;
+            });
+            requestAnimationFrame(animateVisualizer);
         }
         createVisualizer();
-        window.addEventListener('resize', () => { setTimeout(createVisualizer, 200); });
+        animateVisualizer();
+        let resizeTimer;
+        window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(createVisualizer, 200); });
 
-        const observer = new IntersectionObserver((entries)=>entries.forEach(e=>e.isIntersecting&&e.target.classList.add('show')), {threshold:0.1});
-        document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+        // ================= Version accordion =================
+        masterHeader.addEventListener('click', () => versionMasterContainer.classList.toggle('open'));
 
-        // Close modal on overlay click
-        document.getElementById('downloadModal').addEventListener('click', (e) => {
-            if (e.target.id === 'downloadModal') {
-                e.target.classList.remove('show');
-            }
-        });
+        // ================= Reveal on scroll =================
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => e.isIntersecting && e.target.classList.add('show')),
+            { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // ================= Init =================
+        fetchRepoStats();
         fetchAllReleases();
     </script>
 </body>
